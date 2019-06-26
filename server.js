@@ -60,6 +60,8 @@ var initDb = function(callback) {
   var mongodb = require('mongodb');
   if (mongodb == null) return;
 
+  console.log("[bmpibit - initDb] mongod url connection:   ", mongoURL);
+
   mongodb.connect(mongoURL, function(err, conn) {
     if (err) {
       callback(err);
