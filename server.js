@@ -48,6 +48,8 @@ if (mongoURL == null) {
     mongoURLLabel += mongoHost + ':' + mongoPort + '/' + mongoDatabase;
     mongoURL += mongoHost + ':' +  mongoPort + '/' + mongoDatabase;
   }
+
+  console.log("[bmpibit] mongod url connection:   ", mongoURLLabel);
 }
 var db = null,
     dbDetails = new Object();
