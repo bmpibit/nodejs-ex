@@ -13,6 +13,8 @@ var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
     mongoURLLabel = "";
 
+    console.log("[bmpibit] some variables (port, ip, mongoURL):   ", port, "\n", ip , "\n", mongoURL);
+
 if (mongoURL == null) {
   var mongoHost, mongoPort, mongoDatabase, mongoPassword, mongoUser;
   // If using plane old env vars via service discovery
@@ -62,9 +64,9 @@ var initDb = function(callback) {
   if (mongodb == null) return;
   if (MongoClient == null) return;
 
-  console.log("[bmpibit - initDb] mongod url connection:   ", mongoURL);
+  console.log("[bmpibit - initDb] mongodb url connection:   ", mongoURL);
 
-  MongoClient.connect("mongodb://cotolengo/pippo", function(err, conn) {
+  MongoClient.connect(mongoURL, function(err, conn) {
     if (err) {
       callback(err);
       return;
