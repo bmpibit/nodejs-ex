@@ -80,8 +80,13 @@ var initDb = function(callback) {
     console.log('Connected to MongoDB at: %s', mongoURL);
   });
 };
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
-app.get('/', function (req, res) {
+app.get('/', function (req, res, next) {
   // try to initialize the db on every request if it's not already
   // initialized.
   if (!db) {
@@ -102,7 +107,7 @@ app.get('/', function (req, res) {
   }
 });
 
-app.get('/pagecount', function (req, res) {
+app.get('/pagecount', function (req, res, next) {
   // try to initialize the db on every request if it's not already
   // initialized.
   if (!db) {
@@ -110,6 +115,27 @@ app.get('/pagecount', function (req, res) {
   }
   if (db) {
     db.collection('counts').count(function(err, count ){
+      res.send('{ pageCount: ' + count + '}');
+    });
+  } else {
+    res.send('{ pageCount: -1 }');
+  }
+});
+
+app.get('/addcount', function (req, res, next) {
+  // try to initialize the db on every request if it's not already
+  // initialized.
+  if (!db) {
+    initDb(function(err){});
+  }
+  if (db) {
+    var col = db.collection('counts');
+    // Create a document with request IP and current time of request
+    col.insert({ip: req.ip, date: Date.now()});
+    col.count(function(err, count){
+      if (err) {
+        console.log('Error running count. Message:\n'+err);
+      }
       res.send('{ pageCount: ' + count + '}');
     });
   } else {
